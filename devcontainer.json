@@ -1,0 +1,28 @@
+{
+  "name": "Ubuntu VNC Desktop (Reliable)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  // Chạy một lần duy nhất SAU KHI container được tạo
+  // Dùng để thiết lập cấu hình ban đầu
+  "onCreateCommand": "bash -c 'mkdir -p ~/.vnc && echo \"12345678\" | vncpasswd -f > ~/.vnc/passwd && chmod 600 ~/.vnc/passwd && echo -e \"#!/bin/bash\\nxrdb \\\$HOME/.Xresources\\nstartxfce4 &\" > ~/.vnc/xstartup && chmod +x ~/.vnc/xstartup'",
+
+  // Chạy MỖI KHI container khởi động hoặc resume
+  // Dùng để khởi động các dịch vụ
+  "postStartCommand": "/usr/local/bin/vnc-startup.sh",
+
+  // In ra một thông điệp hữu ích khi bạn kết nối vào Codespace
+  "postAttachCommand": "echo 'VNC Desktop is running. Access it via the PORTS tab -> Port 6080.'",
+
+  // Cấu hình chuyển tiếp cổng (port forwarding)
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "VNC Desktop (noVNC)",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  "remoteUser": "vscode"
+}
