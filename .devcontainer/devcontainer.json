@@ -1,34 +1,13 @@
-{
-    "name": "Ubuntu VPS Codespaces",
-    "image": "mcr.microsoft.com/vscode/devcontainers/universal:2-linux",
-    "features": {
-        "ghcr.io/devcontainers/features/desktop-lite:1": {
-            "password": "12345678",
-            "webPort": "6080",
-            "vncPort": "5901"
-        }
-    },
-    "postCreateCommand": "sudo apt-get update && sudo apt-get install -y xfce4 xfce4-goodies dbus-x11 xrdp && sudo systemctl enable xrdp && sudo systemctl start xrdp && sudo adduser xrdp ssl-cert && echo 'exec startxfce4' > ~/.xsession",
-    "forwardPorts": [
-        5901,
-        6080,
-        3389
-    ],
-    "portsAttributes": {
-        "5901": {
-            "label": "VNC"
-        },
-        "6080": {
-            "label": "noVNC (Browser)"
-        },
-        "3389": {
-            "label": "RDP"
-        }
-    },
-    "customizations": {
-        "vscode": {
-            "extensions": []
-        }
-    },
-    "remoteUser": "vscode"
-}
+# Bắt đầu từ image gốc của Microsoft để có sẵn các công cụ cần thiết
+FROM mcr.microsoft.com/vscode/devcontainers/universal:2-linux
+
+# Chuyển sang user root để cài đặt phần mềm
+USER root
+
+# Cập nhật và cài đặt XFCE, XRDP, và các công cụ cần thiết cho desktop
+# Dùng DEBIAN_FRONTEND=noninteractive để tránh các câu hỏi tương tác khi cài đặt
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends xfce4 xfce4-goodies dbus-x11 xrdp
+
+# Chuyển về user mặc định của codespace
+USER vscode
