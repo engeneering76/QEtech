@@ -1,0 +1,16 @@
+{
+    "name": "Webtop VPS",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/config",
+    "forwardPorts": [3000, 3389],
+    "portsAttributes": {
+        "3000": {
+            "label": "Desktop (Web)"
+        },
+        "3389": {
+            "label": "RDP"
+        }
+    },
+    "remoteUser": "root"
+}
