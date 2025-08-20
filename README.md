@@ -52,10 +52,14 @@
         	"3389": {
             	"label": "RDP"
         	}
-    },
-    "remoteUser": "root"
-	}
+    	},
+    	"remoteUser": "root",
+    	"postCreateCommand": "sudo chown -R 1000:1000 ./config"
+		}
 ### Tạo codespace và máy ảo Ubuntu VPS
+### Kiểm tra log của container
+		Xem log: docker logs webtop	-> tìm theo keyword [error], [warn], permission denied
+ 		Xem log realtime: docker logs -f webtop
 ### Tat VPS khi su dung xong
 	**docker-compose down**	(docker-compose down -v) sẽ xóa cả volume (./config))
 ### Khởi chạy lại VPS khi cần
