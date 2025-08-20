@@ -1,4 +1,5 @@
-## Script install Desktop and VNC to Github Codespaces! (xfce4) (sources: https://www.youtube.com/watch?v=jncuv4FcBLc)
+# Script install Desktop and VNC to Github Codespaces! (xfce4) (sources: https://www.youtube.com/watch?v=jncuv4FcBLc)
+## Install
 	sudo apt update -y
 	sudo apt install xfce4 xfce4-goodies novnc python3-websockify python3-numpy tightvncserver htop nano neofetch -y	-> chọn 35 English US -> chon 1 cho keylayout
 	openssl req -x509 -nodes -newkey rsa:3072 -keyout novnc.pem -out novnc.pem -days 3650	-> chon ten Quoc gia mac dinh bang cach nhan nut Enter 8 lan
@@ -18,8 +19,48 @@
 	xrdb $HOME/.Xresources
 	startxfce4 &
   _________________________________________
-
-## Setup Quantum Expresso va tool
+## Cách khác tạo VPS Ubuntu
+### Tạo file .devcontainer/docker-compose.yml có nội dung
+	version: '3'
+	services:
+  		app:
+    	image: lscr.io/linuxserver/webtop:ubuntu-xfce
+    	container_name: webtop
+   		environment:
+      		- PUID=1000
+      		- PGID=1000
+      		- TZ=Etc/UTC
+      		- SUBFOLDER=/ # Thêm dòng này để Webtop chạy trên thư mục gốc của domain
+    volumes:
+      		- ./config:/config
+    ports:
+      		- 3000:3000
+      		- 3389:3389
+    	shm_size: '1gb'
+    	restart: unless-stopped # Thêm dòng này để container tự khởi động lại khi có lỗi
+### Tạo file .devcontainer/devcontainer.json có nội dung 
+	{
+    	"name": "Webtop VPS",
+    	"dockerComposeFile": "docker-compose.yml",
+    	"service": "app",
+    	"workspaceFolder": "/config",
+    	"forwardPorts": [3000, 3389],
+    	"portsAttributes": {
+        	"3000": {
+            	"label": "Desktop (Web)"
+        	},
+        	"3389": {
+            	"label": "RDP"
+        	}
+    },
+    "remoteUser": "root"
+	}
+### Tạo codespace và máy ảo Ubuntu VPS
+### Tat VPS khi su dung xong
+	**docker-compose down**	(docker-compose down -v) sẽ xóa cả volume (./config))
+### Khởi chạy lại VPS khi cần
+	**docker-compose up -d**
+# Setup Quantum Expresso va tool
 
 
 
