@@ -14,4 +14,3 @@ services:
       - 3000:3000
       - 3389:3389
     shm_size: '1gb'
-    restart: unless-stopped # Thêm dòng này để container tự khởi động lại khi có lỗi
