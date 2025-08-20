@@ -12,5 +12,6 @@
             "label": "RDP"
         }
     },
-    "remoteUser": "root"
+    "remoteUser": "root",
+    "postCreateCommand": "sudo chown -R 1000:1000 ./config"
 }
