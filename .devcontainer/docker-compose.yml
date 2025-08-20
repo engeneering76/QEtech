@@ -7,9 +7,11 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
+      - SUBFOLDER=/ # Thêm dòng này để Webtop chạy trên thư mục gốc của domain
     volumes:
       - ./config:/config
     ports:
       - 3000:3000
       - 3389:3389
     shm_size: '1gb'
+    restart: unless-stopped # Thêm dòng này để container tự khởi động lại khi có lỗi
