@@ -1,6 +1,7 @@
 # Script install Desktop and VNC to Github Codespaces! (xfce4)
 ## CÀI ĐẶT
 <details>
+<blockquote>
 #!/bin/bash
 
 # --- Phần 1: Cài đặt các gói cần thiết ---
@@ -20,9 +21,9 @@ tigervncpasswd
 # Tạo file cấu hình xstartup để khởi động XFCE4
 cat <<EOF > ~/.vnc/xstartup
 #!/bin/bash
-unset SESSION_MANAGER
-unset DBUS_SESSION_BUS_ADDRESS
-exec /usr/bin/startxfce4
+xrdb \$HOME/.Xresources
+startxfce4 &
+EOF
 
 # Cấp quyền thực thi cho file xstartup
 chmod +x ~/.vnc/xstartup
@@ -42,6 +43,7 @@ websockify -D --web=/usr/share/novnc/ 6080 localhost:5901
 echo "--- KHOI TAO HOAN TAT! ---"
 echo "--- Cua so 'PORTS' se tu dong mo ra. Hay chuyen trang thai cua cong 6080 sang Public (Bieu tuong hinh trai dat)."
 echo "--- Sau do, nhan vao bieu tuong 'Mo trong Trinh duyet' (Hinh vuong co mui ten) de truy cap VPS."
+</blockquote>
 </details>
   
 ## SỬA LẠI FILE CẤU HÌNH STARTUP  
