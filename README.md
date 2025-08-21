@@ -3,8 +3,14 @@
 ### CODE CÀI ĐẶT
 # #!/bin/bash
 echo "--- Dang cap nhat he thong va cai dat cac goi can thiet... ---"
+
+
 sudo apt-get update -y
+
+
 sudo apt-get install -y xfce4 xfce4-goodies dbus-x11 tigervnc-standalone-server novnc websockify
+
+
 echo "--- Dang cau hinh VNC Server... ---"
 mkdir -p ~/.vnc
 echo "--- Vui long nhap mat khau VNC (it nhat 6 ky tu). Ban se khong thay ky tu khi go. ---"
