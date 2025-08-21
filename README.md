@@ -1,4 +1,5 @@
 # Script install Desktop and VNC to Github Codespaces! (xfce4)
+
 ## CÀI ĐẶT
 ### CODE CÀI ĐẶT
 # #!/bin/bash
@@ -111,22 +112,20 @@ echo "--- Cua so 'PORTS' se tu dong mo ra. Hay chuyen trang thai cua cong 6080 s
 echo "--- Sau do, nhan vao bieu tuong 'Mo trong Trinh duyet' (Hinh vuong co mui ten) de truy cap VPS." '
 </blockquote>
 </details>
+
   
 ## SỬA LẠI FILE CẤU HÌNH STARTUP  
 	nano ~/.vnc/xstartup
- 		<blockquote>
 		#!/bin/bash
 		unset SESSION_MANAGER
 		unset DBUS_SESSION_BUS_ADDRESS
 		exec /usr/bin/startxfce4
-  		</blockquote>
-		-> Lưu file và thoát nano: Ctrl + X -> Y -> Enter.
+	-> Lưu file và thoát nano: Ctrl + X -> Y -> Enter.
  	tigervncserver -localhost no -geometry 1280x720 -depth 24 :1
  	websockify -D --web=/usr/share/novnc/ 6080 localhost:5901 
 
  	Có thể dùng nano để sửa file starup như sau:
   	nano ~/.vnc/xstartup
-   		<blockquote>
  		#!/bin/bash
 		#
 		# Start XFCE4 Desktop Environment
@@ -140,23 +139,26 @@ echo "--- Sau do, nhan vao bieu tuong 'Mo trong Trinh duyet' (Hinh vuong co mui 
 		eval $(dbus-launch --sh-syntax)
 		# Start the main XFCE4 session
 		startxfce4 &
-  		</blockquote>
-		-> Lưu file và thoát nano: Ctrl + X -> Y -> Enter.
+	-> Lưu file và thoát nano: Ctrl + X -> Y -> Enter.
   	tigervncserver -localhost no -geometry 1280x720 -depth 24 :1
  	websockify -D --web=/usr/share/novnc/ 6080 localhost:5901
+
 
 ## CHECK VNC SERVER CÓ CHẠY
   	ps aux | grep Xtigervnc	-> Có dòng Xtigervnc :1 ... là VNC server đang chạy
    	cat ~/.vnc/*.log	-> tìm các dòng có chữ "Error" hoặc "Fatal" để xem lỗi
-	
+
+ 
 ## DỪNG LẠI TẤT CẢ DỊCH VỤ ĐÃ CÀI
 	tigervncserver -kill :1
 	pkill websockify
 	tigervncserver -localhost no -geometry 1280x720 -depth 24 :1
  	websockify -D --web=/usr/share/novnc/ 6080 localhost:5901
+
   
 ## XEM PHIÊN BẢN UBUNTU
 	lsb_realese -a
+
  
 ### Tat VPS khi su dung xong
 
