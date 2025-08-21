@@ -1,6 +1,6 @@
 # Script install Desktop and VNC to Github Codespaces! (xfce4)
 ## CÀI ĐẶT
-<blockquote>
+<details>
 #!/bin/bash
 
 # --- Phần 1: Cài đặt các gói cần thiết ---
@@ -42,7 +42,7 @@ websockify -D --web=/usr/share/novnc/ 6080 localhost:5901
 echo "--- KHOI TAO HOAN TAT! ---"
 echo "--- Cua so 'PORTS' se tu dong mo ra. Hay chuyen trang thai cua cong 6080 sang Public (Bieu tuong hinh trai dat)."
 echo "--- Sau do, nhan vao bieu tuong 'Mo trong Trinh duyet' (Hinh vuong co mui ten) de truy cap VPS."
-</blockquote>
+</details>
   
 ## SỬA LẠI FILE CẤU HÌNH STARTUP  
 	nano ~/.vnc/xstartup
