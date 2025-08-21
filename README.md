@@ -30,13 +30,13 @@ cat <<EOF > ~/.vnc/xstartup
 # #!/bin/bash
 
 
-unset SESSION_MANAGER
+xrdb \$HOME/.Xresources
 
 
-unset DBUS_SESSION_BUS_ADDRESS
+startxfce4 &
 
 
-exec /usr/bin/startxfce4
+EOF
 
 
 chmod +x ~/.vnc/xstartup
