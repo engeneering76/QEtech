@@ -17,7 +17,7 @@
 			#!/bin/bash
 			unset SESSION_MANAGER
 			unset DBUS_SESSION_BUS_ADDRESS
-			exec /usr/bin/startxfce4 (Ctrl X + Y + Enter)
+			exec /usr/bin/startxfce4
 	# Cấp quyền thực thi cho file xstartup
 		chmod +x ~/.vnc/xstartup
 	# --- Phần 3: Khởi động VNC và Web Server ---
@@ -40,9 +40,12 @@
 		unset SESSION_MANAGER
 		unset DBUS_SESSION_BUS_ADDRESS
 		exec /usr/bin/startxfce4
-		-> Lưu file và thoát nano: Nhấn Ctrl + X -> Nhấn phím Y để xác nhận lưu -> Nhấn Enter để ghi đè lên file cũ.
-	Có thể dùng nano để sửa file starup như sau:
- 	nano ~/.vnc/xstartup
+		-> Lưu file và thoát nano: Ctrl + X -> Y -> Enter.
+ 	tigervncserver -localhost no -geometry 1280x720 -depth 24 :1
+ 	websockify -D --web=/usr/share/novnc/ 6080 localhost:5901 
+
+ 	Có thể dùng nano để sửa file starup như sau:
+  	nano ~/.vnc/xstartup
  		#!/bin/bash
 		#
 		# Start XFCE4 Desktop Environment
@@ -56,12 +59,15 @@
 		eval $(dbus-launch --sh-syntax)
 		# Start the main XFCE4 session
 		startxfce4 &
-		-> Lưu file và thoát nano: Nhấn Ctrl + X -> Nhấn phím Y để xác nhận lưu -> Nhấn Enter để ghi đè lên file cũ.
+		-> Lưu file và thoát nano: Ctrl + X -> Y -> Enter.
+  	tigervncserver -localhost no -geometry 1280x720 -depth 24 :1
+ 	websockify -D --web=/usr/share/novnc/ 6080 localhost:5901
+  
 ## DỪNG LẠI TẤT CẢ DỊCH VỤ ĐÃ CÀI
-1.	Dừng tất cả các dịch vụ cũ:
 	tigervncserver -kill :1
 	pkill websockify
-
+	tigervncserver -localhost no -geometry 1280x720 -depth 24 :1
+ 	websockify -D --web=/usr/share/novnc/ 6080 localhost:5901
 ## XEM PHIÊN BẢN UBUNTU
 	lsb_realese -a
 ### Tat VPS khi su dung xong
