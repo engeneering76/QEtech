@@ -1,71 +1,73 @@
-# Script install Desktop and VNC to Github Codespaces! (xfce4) (sources: https://www.youtube.com/watch?v=jncuv4FcBLc)
-## Install
-	sudo apt update -y
-	sudo apt install xfce4 xfce4-goodies novnc python3-websockify python3-numpy tightvncserver htop nano neofetch -y	-> chọn 35 English US -> chon 1 cho keylayout
-	openssl req -x509 -nodes -newkey rsa:3072 -keyout novnc.pem -out novnc.pem -days 3650	-> chon ten Quoc gia mac dinh bang cach nhan nut Enter 8 lan
-	USER=root vncserver	-> chay VNC server với quyền root -> nhap password moi -> chon n de khong show password
-	mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
-	sudo apt install nano
-	nano ~/.vnc/xstartup	-> terminal chuyen sang cua so moi GNU nano 4.8 -> copy ca 3 dong code dan vao cua so moi mo
-		#!/bin/bash
-		xrdb $HOME/.Xresources
-		startxfce4 &	-> Nhấn Ctrl + S -> sau đó nhấn Ctrl+X để thoát (nhu huong dan o duoi cung cua so terminal)
-	chmod +x ~/.vnc/xstartup	-> tao file executable
-	USER=root vncserver	-> chuyen sang cua so PORTs de truy cap forwarding port
-	htop	-> tuong tu nhu Task Manager cua Win10 -? nhan F10 đe thoat
-	websockify -D --web=/usr/share/novnc/ --cert=/home/ubuntu/novnc.pem 6080 localhost:5901	-> sang PORTs chon port 6080 -> chon cong 5901 -> vao thu muc vnc.html de su dung Ubuntu VPS
-  _________________________________________
+# Script install Desktop and VNC to Github Codespaces! (xfce4)
+## CÀI ĐẶT
 	#!/bin/bash
-	xrdb $HOME/.Xresources
-	startxfce4 &
-  _________________________________________
-## Cách khác tạo VPS Ubuntu
-### Tạo file .devcontainer/docker-compose.yml có nội dung
-	version: '3'
-	services:
-  		app:
-    	image: lscr.io/linuxserver/webtop:ubuntu-xfce
-    	container_name: webtop
-   		environment:
-      		- PUID=1000
-      		- PGID=1000
-      		- TZ=Etc/UTC
-      		- SUBFOLDER=/ # Thêm dòng này để Webtop chạy trên thư mục gốc của domain
-    volumes:
-      		- ./config:/config
-    ports:
-      		- 3000:3000
-      		- 3389:3389
-    	shm_size: '1gb'
-    	restart: unless-stopped # Thêm dòng này để container tự khởi động lại khi có lỗi
-### Tạo file .devcontainer/devcontainer.json có nội dung 
-	{
-    	"name": "Webtop VPS",
-    	"dockerComposeFile": "docker-compose.yml",
-    	"service": "app",
-    	"workspaceFolder": "/config",
-    	"forwardPorts": [3000, 3389],
-    	"portsAttributes": {
-        	"3000": {
-            	"label": "Desktop (Web)"
-        	},
-        	"3389": {
-            	"label": "RDP"
-        	}
-    	},
-    	"remoteUser": "root",
-    	"postCreateCommand": "sudo chown -R 1000:1000 ./config"
-		}
-### Tạo codespace và máy ảo Ubuntu VPS
-### Kiểm tra log của container
-		Xem log: docker logs webtop	-> tìm theo keyword [error], [warn], permission denied
- 		Xem log realtime: docker logs -f webtop
+	# --- Phần 1: Cài đặt các gói cần thiết ---
+		echo "--- Dang cap nhat he thong va cai dat cac goi can thiet... ---"
+		sudo apt-get update -y
+		sudo apt-get install -y xfce4 xfce4-goodies dbus-x11 tigervnc-standalone-server novnc websockify
+	# --- Phần 2: Cấu hình VNC Server ---
+		echo "--- Dang cau hinh VNC Server... ---"
+	# Tạo thư mục cấu hình VNC nếu chưa có
+		mkdir -p ~/.vnc
+	# Thiết lập mật khẩu VNC
+		echo "--- Vui long nhap mat khau VNC (it nhat 6 ky tu). Ban se khong thay ky tu khi go. ---"
+		tigervncpasswd
+	# Tạo file cấu hình xstartup để khởi động XFCE4
+		cat <<EOF > ~/.vnc/xstartup
+			#!/bin/bash
+			unset SESSION_MANAGER
+			unset DBUS_SESSION_BUS_ADDRESS
+			exec /usr/bin/startxfce4 (Ctrl X + Y + Enter)
+	# Cấp quyền thực thi cho file xstartup
+		chmod +x ~/.vnc/xstartup
+	# --- Phần 3: Khởi động VNC và Web Server ---
+		echo "--- Dang khoi dong VNC Server... ---"
+	# Dọn dẹp các phiên VNC cũ nếu có
+		tigervncserver -kill :1 >/dev/null 2>&1 || true
+	# Khởi động phiên VNC mới trên màn hình :1 (cổng 5901)
+		tigervncserver -localhost no -geometry 1280x720 -depth 24 :1
+		echo "--- Dang khoi dong Web Interface (noVNC)... ---"
+	# Khởi động websockify để kết nối trình duyệt với VNC
+	# Lắng nghe trên cổng 6080 và chuyển tiếp tới cổng VNC 5901
+		websockify -D --web=/usr/share/novnc/ 6080 localhost:5901
+		echo "--- KHOI TAO HOAN TAT! ---"
+		echo "--- Cua so 'PORTS' se tu dong mo ra. Hay chuyen trang thai cua cong 6080 sang Public (Bieu tuong hinh trai dat)."
+		echo "--- Sau do, nhan vao bieu tuong 'Mo trong Trinh duyet' (Hinh vuong co mui ten) de truy cap VPS."
+  
+## SỬA LẠI FILE CẤU HÌNH STARTUP  
+	nano ~/.vnc/xstartup
+		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
+		exec /usr/bin/startxfce4
+		-> Lưu file và thoát nano: Nhấn Ctrl + X -> Nhấn phím Y để xác nhận lưu -> Nhấn Enter để ghi đè lên file cũ.
+	Có thể dùng nano để sửa file starup như sau:
+ 	nano ~/.vnc/xstartup
+ 		#!/bin/bash
+		#
+		# Start XFCE4 Desktop Environment
+		#
+		# Unset problematic session variables
+			unset SESSION_MANAGER
+			unset DBUS_SESSION_BUS_ADDRESS
+		# Load resources
+		[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+		# Start a new D-Bus session for this VNC instance
+		eval $(dbus-launch --sh-syntax)
+		# Start the main XFCE4 session
+		startxfce4 &
+		-> Lưu file và thoát nano: Nhấn Ctrl + X -> Nhấn phím Y để xác nhận lưu -> Nhấn Enter để ghi đè lên file cũ.
+## DỪNG LẠI TẤT CẢ DỊCH VỤ ĐÃ CÀI
+1.	Dừng tất cả các dịch vụ cũ:
+	tigervncserver -kill :1
+	pkill websockify
+
+## XEM PHIÊN BẢN UBUNTU
+	lsb_realese -a
 ### Tat VPS khi su dung xong
-	docker-compose stop	
-	docker-compose down	(docker-compose down -v) sẽ xóa cả volume (./config))
 ### Khởi chạy lại VPS khi cần
-	docker-compose start
-	docker-compose up -d
+	tigervncserver -localhost no -geometry 1280x720 -depth 24 :1
+ 	websockify -D --web=/usr/share/novnc/ 6080 localhost:5901
 # Setup Quantum Expresso va tool
 
 
